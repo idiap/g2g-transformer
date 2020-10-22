@@ -46,7 +46,7 @@ task, you just need to add `BertGraphModel` class to your code to encode
 both token-level and graph-level information. Here is a sample usage:
 
 ```python
-#loading model
+#oading model
 import torch
 from parser.utils.graph import initialize_bertgraph,BertGraphModel
 # inputing unlabelled graph with label size 5, and Layer Normalization of key
