@@ -71,7 +71,7 @@ class Predict(object):
         print("Load the dataset")
         corpus = Corpus.load(args.fdata)
         if args.use_predicted:
-            corpus_predicted = Corpus.load(args.fudify)
+            corpus_predicted = Corpus.load(args.finit)
 
         if args.use_predicted:
             dataset = TextDataset(vocab.numericalize(corpus, corpus_predicted))
