@@ -74,7 +74,7 @@ class GraphBiaffineParser(nn.Module):
         if sign is not None:
             mask = sign.unsqueeze(1) * mask
             mask = mask.bool()
-        x = self.bert(words,mask,tags, graph_arc)
+        x = self.bert(words,mask,tags, graph_arc,graph_rel)
 
         if self.config.mix_layers:
             x = x[2]
