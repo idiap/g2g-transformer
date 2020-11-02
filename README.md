@@ -23,10 +23,10 @@ Contents
 - [Predict Raw Sentences](#predictraw)
 - [Citations](#citations)
 
-Installation
---------------  
 <a name="installation"/>  
 
+Installation
+--------------  
 Following packages should be included in your environment:
 
 - Python >= 3.7
@@ -39,9 +39,11 @@ The easier way is to run the following command:
 conda env create -f environment.yml
 conda activate rngtr
 ```
+
+<a name="othertasks"/>  
+
 Quick Start
 -------------
-<a name="othertasks"/>  
 
 Graph-to-Graph Transformer architecture is general and can be applied to
 any NLP tasks which interacts with graphs. To use our implementation in your
@@ -85,11 +87,10 @@ config.add_graph_par(GRAPH-CONFIG)
 encoder = BertGraphModel(config)
 ```
 
+<a name="datapreprocessingandinitialparser"/>  
 
 Data Pre-processing and Initial Parser 
 -----------------  
-
-<a name="datapreprocessingandinitialparser"/>  
 
 ### Dataset Preparation  
 
@@ -128,10 +129,10 @@ Alternatively, you can easily run the following command file to produce all requ
 bash job_scripts/udify_dataset.bash
 ```
 
+<a name="training"/>  
+
 Training
 -------------
-
-<a name="training"/>  
 
 To train your own model, you can easily fill out the script in `job_scripts` directory, 
 and run it. Here is the list of sample scripts:  
@@ -142,10 +143,10 @@ Syntactic Transformer | `baseline.bash` |
 Any initial parser+RNGTr | `rngtr.bash` |
 Empty+RNGTr | `empty_rngtr.bash` |
 
+<a name="evaluation"/>  
+
 Evaluation
 -------------
-
-<a name="evaluation"/>  
 
 First you should download official scripts from [UD](https://universaldependencies.org/conll18/evaluation.html), 
 [Penn Treebaks](https://depparse.uvt.nl/), and [German](https://ufal.mff.cuni.cz/conll2009-st/eval-data.html). Then,
@@ -157,12 +158,12 @@ bash job_scripts/predict.bash
 To replicate `refinement analysis` and `error analysis` results, you should use 
 [MaltEval](http://www.maltparser.org/malteval.html) tools.
 
+<a name="predictraw"/>  
+
 Predict Raw Sentences
 --------------------- 
 
-<a name="predictraw"/>  
-
-
+You can also predict dependency graphs of raw texts with a pre-trained model with ```predict.bash``` file. Just set ```input_type``` to ```raw```. Then, put all your sentences in a .txt file, and the output will be in CoNNL format.
 
 Citations
 -------------
