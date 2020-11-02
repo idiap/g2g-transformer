@@ -32,13 +32,11 @@ class Predict(object):
         subparser.add_argument('--fdata', default='data/test.conllx',
                                help='path to dataset')
         subparser.add_argument('--finit', default='data/test.conllx',
-                               help='path to pretrained parser')
+                               help='path to initial parser results')
         subparser.add_argument('--fpred', default='pred.conllx',
                                help='path to predicted result')
-        subparser.add_argument('--modelname', default='None',
-                               help='path to test file')
-        subparser.add_argument('--mainpath', default='None',
-                               help='path to test file')
+        subparser.add_argument('--modelpath', default='None',
+                               help='path to saved model')
         subparser.add_argument('--use_predicted', default=False,action='store_true',
                                help='Use predicted Parser')
         subparser.add_argument("--input_type", type=str, choices=["conllx", "conllu", "raw"],
@@ -61,8 +59,8 @@ class Predict(object):
     def __call__(self, args):
         print("Load the model")
 
-        modelpath = args.mainpath + args.model + args.modelname + "/model_weights"
-        vocabpath = args.mainpath + args.vocab + args.modelname + "/vocab.tag"
+        modelpath = args.modelpath + "/model_weights"
+        vocabpath = args.modelpath + "/vocab.tag"
 
         config = torch.load(modelpath)['config']
         config.batch_size = 2

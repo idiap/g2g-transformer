@@ -41,8 +41,6 @@ if __name__ == '__main__':
                                help='path to config file')
         subparser.add_argument('--model', '-m', default='exp/',
                                help='path to model file')
-        subparser.add_argument('--vocab', '-v', default='exp/',
-                               help='path to vocab file')
         subparser.add_argument('--seed', '-s', default=1, type=int,
                                help='seed for generating random numbers')
         subparser.add_argument('--threads', '-t', default=4, type=int,

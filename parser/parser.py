@@ -33,9 +33,9 @@ class GraphBiaffineParser(nn.Module):
 
         if base:
             self.bert = initialize_bertgraph(
-                config.main_path + "/model" + "/model_" + config.modelname)
+                config.modelpath + "/model_temp")
         else:
-            self.bert = initialize_bertgraph(config.main_path+"/model"+"/model_"+config.modelname,
+            self.bert = initialize_bertgraph(config.modelpath+"/model_temp",
                                            config.layernorm_key,config.layernorm_value,config.input_labeled_graph,
                                            config.input_unlabeled_graph,label_size)
 

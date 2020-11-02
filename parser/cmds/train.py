@@ -67,8 +67,8 @@ class Train(object):
                                help='Stop the refinement steps based on unlabelled graph')
         subparser.add_argument('--stop_arc_rel', default=False, action='store_true',
                                help='Stop the refinement steps based on labelled graph')
-        subparser.add_argument('--modelname', default='None',
-                               help='path to test file')
+        subparser.add_argument('--modelpath', default='None',
+                               help='Where to save trained model')
         subparser.add_argument('--thr', default=0.001, type=float,
                                help='Threshold for stopping iteration')
         subparser.add_argument('--lr1', default=1e-5, type=float,
@@ -109,7 +109,6 @@ class Train(object):
         subparser.add_argument('--max_grad_norm', default=1.0, type=float,
                                help='Clip gradient')
         subparser.add_argument('--bert_path', default='', help='path to BERT')
-        subparser.add_argument('--main_path', default='', help='path to main directory')
         subparser.add_argument("--input_type", type=str, choices=["conllx", "conllu"],
                                default="conllx")
 
@@ -143,18 +142,12 @@ class Train(object):
                 dev_predicted = Corpus.load(config.fpredicted_dev)
                 test_predicted = Corpus.load(config.fpredicted_test)
 
-        if path.exists(config.main_path + "/exp") != True:
-            os.mkdir(config.main_path + "/exp")
-
-        if path.exists(config.main_path + "/model") != True:
-            os.mkdir(config.main_path + "/model")
-
-        if path.exists(config.main_path + config.model + config.modelname) != True:
-            os.mkdir(config.main_path + config.model + config.modelname)
+        if path.exists(config.modelpath) != True:
+            os.mkdir(config.modelpath)
 
         vocab = Vocab.from_corpus(config=config, corpus=train, min_freq=2)
 
-        torch.save(vocab, config.main_path + config.vocab + config.modelname + "/vocab.tag")
+        torch.save(vocab, config.modelpath + "/vocab.tag")
 
         config.update({
             'n_words': vocab.n_train_words,
@@ -202,7 +195,6 @@ class Train(object):
             print('device:cuda')
             device = torch.device('cuda')
             parser = parser.to(device)
-        # print(f"{parser}\n")
 
         model = Model(vocab, parser, config, vocab.n_rels)
         total_time = timedelta()
@@ -285,15 +277,15 @@ class Train(object):
             # save the model if it is the best so far
             if dev_metric > best_metric:
                 best_e, best_metric = epoch, dev_metric
-                print(config.model + config.modelname + "/model_weights")
-                model.parser.save(config.main_path + config.model + config.modelname + "/model_weights")
+                print(config.modelpath + "/model_weights")
+                model.parser.save(config.modelpath + "/model_weights")
                 print(f"{t}s elapsed (saved)\n")
             else:
                 print(f"{t}s elapsed\n")
             total_time += t
             if epoch - best_e >= config.patience:
                 break
-        model.parser = BiaffineParser.load(config.main_path + config.model + config.modelname + "/model_weights")
+        model.parser = BiaffineParser.load(config.modelpath + "/model_weights")
         if config.use_predicted:
             loss, metric = model.evaluate_predicted(test_loader, config.punct)
         else:

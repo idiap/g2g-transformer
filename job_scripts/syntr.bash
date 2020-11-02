@@ -16,8 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with g2g-transformer. If not, see <http://www.gnu.org/licenses/>.
 
-MODELNAME="syntr"
-MAIN_PATH=""
+MODELPATH=""
 TRAIN_PATH=""
 DEV_PATH=""
 TEST_PATH=""
@@ -25,6 +24,6 @@ BERT_PATH=""
 #conllu or conllx
 INPUT_TYPE="conllu"
 python run.py train --lr1 1e-5 --lr2 2e-3 -w 0.001 \
-                    --modelname $MODELNAME --num_iter_encoder 1 --main_path $MAIN_PATH --ftrain $TRAIN_PATH \
+                    --modelpath $MODELPATH --num_iter_encoder 1 --ftrain $TRAIN_PATH \
                     --ftest $TEST_PATH --fdev $DEV_PATH --punct --bert_path $BERT_PATH --use_mst_eval --use_two_opts \
                     --input_type $INPUT_TYPE

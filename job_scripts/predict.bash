@@ -17,13 +17,11 @@
 #You should have received a copy of the GNU General Public License
 #along with g2g-transformer. If not, see <http://www.gnu.org/licenses/>.
 
-# main directory
-main_path=""
 # initial prediction (leave it blank if there is no initial parser)
 initial=""
 # original conllu input
 input=""
-modelname=""
+modelpath=""
 output_path=""
 # UD: conllu, penn: conllx, german: other
 type="conllu"

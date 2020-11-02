@@ -57,11 +57,11 @@ class Vocab(object):
         # Train our model
         self.bertmodel.train()
 
-        if os.path.exists(config.main_path + "/model" + "/model_" + config.modelname) != True:
-            os.mkdir(config.main_path + "/model" + "/model_" + config.modelname)
+        if os.path.exists(config.modelpath + "/model_temp") != True:
+            os.mkdir(config.modelpath + "/model_temp")
             
         ### Now let's save our model and tokenizer to a directory
-        self.bertmodel.save_pretrained(config.main_path + "/model" + "/model_" + config.modelname)
+        self.bertmodel.save_pretrained(config.modelpath + "/model_temp")
 
         self.tag_dict = {tag: i for i,tag in enumerate(self.tags)}
         
