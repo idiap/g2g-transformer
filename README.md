@@ -10,7 +10,7 @@ We propose ["Graph-to-Graph Transformer"](https://github.com/alirezamshi/G2GTr) 
 to generalize vanilla Transformer to encode graph structure, and builds the desired
 output graph.
 
-**Note** :Part of the code is from [G2GTr](https://github.com/alirezamshi/G2GTr) repository.
+**Note** : To use G2GTr model to transition-based dependency parsing, please refer to [G2GTr](https://github.com/alirezamshi/G2GTr) repository.
 
 Contents
 ---------------
@@ -113,7 +113,7 @@ LDC license. We use predicted POS tags provided by organizers.
 
 #### UD Treebanks
 You can find required Treebanks from [here](https://universaldependencies.org/).
-(use version 2.3). Preprocessing tools can be found in [this repository](https://universaldependencies.org/tools.html)
+(use version 2.3)
 
 ### Initial Parser
 As mentioned in our paper, you can use any initial parser to produce dependency graph. 
@@ -122,10 +122,11 @@ model to ouput prediction of [UDify parser](https://arxiv.org/abs/1904.02099) fo
 **Biaffine Parser**: To prepare biaffine initial parser, we use [this repository](https://github.com/yzhangcs/parser) 
 to produce output predictions.  
 **UDify Parser**: For UD Treebanks, we use [UDify repository](https://github.com/Hyperparticle/udify)
-to produce required initial dependency graph. Since our model currently works with conllx format
-you can use `` conllu_to_conllx.pl`` to do this conversion, and ``restore_conllu_lines.pl``
-to convert back to conllu format.  
-Alternatively, you can easily run ``udify_dataset.bash`` file to produce all required outputs.
+to produce required initial dependency graph.  
+Alternatively, you can easily run the following command file to produce all required outputs:  
+```
+bash job_scripts/udify_dataset.bash
+```
 
 <a name="training"/>  
 
@@ -145,7 +146,11 @@ Empty+RNGTr | `empty_rngtr.bash` |
 Evaluation
 -------------
 First you should download official scripts from [UD](https://universaldependencies.org/conll18/evaluation.html), 
-[Penn Treebaks](https://depparse.uvt.nl/), and [German](https://ufal.mff.cuni.cz/conll2009-st/eval-data.html).  
+[Penn Treebaks](https://depparse.uvt.nl/), and [German](https://ufal.mff.cuni.cz/conll2009-st/eval-data.html). Then,
+run the following command:  
+```
+bash job_scripts/predict.bash
+```
 
 To replicate `refinement analysis` and `error analysis` results, you should use 
 [MaltEval](http://www.maltparser.org/malteval.html) tools.

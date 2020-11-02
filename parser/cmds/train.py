@@ -1,11 +1,10 @@
-
-# Copyright (c) 2020 Idiap Research Institute, http://www.idiap.ch/
+# Copyright (c) 20xx Idiap Research Institute, http://www.idiap.ch/
 # Written by Alireza Mohammadshahi <alireza.mohammadshahi@idiap.ch>,
 
 # This file is part of g2g-transformer.
 
 # g2g-transformer is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License version 2 as
+# it under the terms of the GNU General Public License version 3 as
 # published by the Free Software Foundation.
 
 # g2g-transformer is distributed in the hope that it will be useful,
@@ -23,8 +22,10 @@ from parser import BiaffineParser, Model
 from parser.metric import Metric
 from parser.utils import Corpus, Vocab
 from parser.utils.data import TextDataset, batchify
+from parser.utils.dataset import UniversalDependenciesDatasetReader
 import torch
-from transformers import AdamW,get_linear_schedule_with_warmup
+from transformers import AdamW, get_linear_schedule_with_warmup
+
 
 class Train(object):
 
@@ -59,7 +60,7 @@ class Train(object):
         subparser.add_argument('--warmupproportion', '-w', default=0.01, type=float,
                                help='Warm up proportion for BertAdam optimizer')
         subparser.add_argument('--lowercase', default=False, action='store_true',
-                               help='whether to do lowercase')    
+                               help='whether to do lowercase')
         subparser.add_argument('--lower_for_nonbert', default=False, action='store_true',
                                help='Divide warmup proportion for non-bert parameters by 2')
         subparser.add_argument('--stop_arc', default=False, action='store_true',
@@ -88,55 +89,73 @@ class Train(object):
         subparser.add_argument('--input_unlabeled_graph', default=False, action='store_true',
                                help='Input Unlabeled dependency graph')
         subparser.add_argument("--subword_option", type=str, choices=["syntax", "semantic"],
-                            default="semantic")
+                               default="semantic")
         subparser.add_argument('--use_japanese', default=False, action='store_true',
                                help='Use Japanese BERT')
         subparser.add_argument('--layernorm_key', default=False, action='store_true',
-                               help='layer normalization for Key')  
+                               help='layer normalization for Key')
         subparser.add_argument('--layernorm_value', default=False, action='store_true',
-                               help='layer normalization for Value')  
+                               help='layer normalization for Value')
         subparser.add_argument('--use_two_opts', default=False, action='store_true',
-                               help='Use one optimizer for Bert and one for others') 
+                               help='Use one optimizer for Bert and one for others')
         subparser.add_argument('--mix_layers', default=False, action='store_true',
-                               help='Use the mixture of internal layers instead of last layer') 
-        subparser.add_argument('--layer_dropout', default=0.1,type=float,
+                               help='Use the mixture of internal layers instead of last layer')
+        subparser.add_argument('--layer_dropout', default=0.1, type=float,
                                help='Layer dropout when mix layers')
-        subparser.add_argument('--mlp_dropout', default=0.33,type=float,
+        subparser.add_argument('--mlp_dropout', default=0.33, type=float,
                                help='MLP drop out')
-        subparser.add_argument('--weight_decay', default=0.01,type=float,
+        subparser.add_argument('--weight_decay', default=0.01, type=float,
                                help='Weight Decay')
-        subparser.add_argument('--max_grad_norm', default=1.0,type=float,
+        subparser.add_argument('--max_grad_norm', default=1.0, type=float,
                                help='Clip gradient')
         subparser.add_argument('--bert_path', default='', help='path to BERT')
         subparser.add_argument('--main_path', default='', help='path to main directory')
+        subparser.add_argument("--input_type", type=str, choices=["conllx", "conllu"],
+                               default="conllx")
 
         return subparser
 
     def __call__(self, config):
         print("Preprocess the data")
-        train = Corpus.load(config.ftrain)
-        dev = Corpus.load(config.fdev)
-        test = Corpus.load(config.ftest)
+
+        if config.input_type == "conllu":
+            train = UniversalDependenciesDatasetReader()
+            train.load(config.ftrain)
+            dev = UniversalDependenciesDatasetReader()
+            dev.load(config.fdev)
+            test = UniversalDependenciesDatasetReader()
+            test.load(config.ftest)
+        else:
+            train = Corpus.load(config.ftrain)
+            dev = Corpus.load(config.fdev)
+            test = Corpus.load(config.ftest)
 
         if config.use_predicted:
-            train_predicted = Corpus.load(config.fpredicted_train)
-            dev_predicted  = Corpus.load(config.fpredicted_dev)
-            test_predicted = Corpus.load(config.fpredicted_test)
+            if config.input_type == "conllu":
+                train_predicted = UniversalDependenciesDatasetReader()
+                train_predicted.load(config.fpredicted_train)
+                dev_predicted = UniversalDependenciesDatasetReader()
+                dev_predicted.load(config.fpredicted_dev)
+                test_predicted = UniversalDependenciesDatasetReader()
+                test_predicted.load(config.fpredicted_test)
+            else:
+                train_predicted = Corpus.load(config.fpredicted_train)
+                dev_predicted = Corpus.load(config.fpredicted_dev)
+                test_predicted = Corpus.load(config.fpredicted_test)
 
-        if path.exists(config.main_path+"/exp") != True:
-            os.mkdir(config.main_path+"/exp")
+        if path.exists(config.main_path + "/exp") != True:
+            os.mkdir(config.main_path + "/exp")
 
-        if path.exists(config.main_path+"/model") != True:
-            os.mkdir(config.main_path+"/model")
+        if path.exists(config.main_path + "/model") != True:
+            os.mkdir(config.main_path + "/model")
 
+        if path.exists(config.main_path + config.model + config.modelname) != True:
+            os.mkdir(config.main_path + config.model + config.modelname)
 
-        if path.exists(config.main_path+config.model+config.modelname) != True:
-            os.mkdir(config.main_path+config.model+config.modelname)
-            
         vocab = Vocab.from_corpus(config=config, corpus=train, min_freq=2)
-        
-        torch.save(vocab, config.vocab+config.modelname + "/vocab.tag")
-        
+
+        torch.save(vocab, config.main_path + config.vocab + config.modelname + "/vocab.tag")
+
         config.update({
             'n_words': vocab.n_train_words,
             'n_tags': vocab.n_tags,
@@ -144,31 +163,29 @@ class Train(object):
             'pad_index': vocab.pad_index,
             'unk_index': vocab.unk_index
         })
-        
+
         print("Load the dataset")
 
-
         if config.use_predicted:
-            trainset = TextDataset(vocab.numericalize(train,train_predicted))
-            devset = TextDataset(vocab.numericalize(dev,dev_predicted))
-            testset = TextDataset(vocab.numericalize(test,test_predicted))
+            trainset = TextDataset(vocab.numericalize(train, train_predicted))
+            devset = TextDataset(vocab.numericalize(dev, dev_predicted))
+            testset = TextDataset(vocab.numericalize(test, test_predicted))
         else:
             trainset = TextDataset(vocab.numericalize(train))
             devset = TextDataset(vocab.numericalize(dev))
             testset = TextDataset(vocab.numericalize(test))
 
-
         # set the data loaders
-        train_loader,_ = batchify(dataset=trainset,
-                                batch_size=config.batch_size,
-                                n_buckets=config.buckets,
-                                shuffle=True)
-        dev_loader,_  = batchify(dataset=devset,
-                              batch_size=config.batch_size,
-                              n_buckets=config.buckets)
-        test_loader,_ = batchify(dataset=testset,
-                               batch_size=config.batch_size,
-                               n_buckets=config.buckets)
+        train_loader, _ = batchify(dataset=trainset,
+                                   batch_size=config.batch_size,
+                                   n_buckets=config.buckets,
+                                   shuffle=True)
+        dev_loader, _ = batchify(dataset=devset,
+                                 batch_size=config.batch_size,
+                                 n_buckets=config.buckets)
+        test_loader, _ = batchify(dataset=testset,
+                                  batch_size=config.batch_size,
+                                  n_buckets=config.buckets)
         print(f"{'train:':6} {len(trainset):5} sentences in total, "
               f"{len(train_loader):3} batches provided")
         print(f"{'dev:':6} {len(devset):5} sentences in total, "
@@ -185,12 +202,12 @@ class Train(object):
             print('device:cuda')
             device = torch.device('cuda')
             parser = parser.to(device)
-        #print(f"{parser}\n")
+        # print(f"{parser}\n")
 
         model = Model(vocab, parser, config, vocab.n_rels)
         total_time = timedelta()
         best_e, best_metric = 1, Metric()
-        
+
         num_train_optimization_steps = int(config.num_iter_encoder * config.epochs * len(train_loader))
         warmup_steps = int(config.warmupproportion * num_train_optimization_steps)
 
@@ -208,7 +225,7 @@ class Train(object):
             no_decay = ['bias', 'LayerNorm.weight']
             optimizer_grouped_parameters_nonbert = [
                 {'params': [p for n, p in model_nonbert if not any(nd in n for nd in no_decay)],
-                'weight_decay': config.weight_decay},
+                 'weight_decay': config.weight_decay},
                 {'params': [p for n, p in model_nonbert if any(nd in n for nd in no_decay)], 'weight_decay': 0.0}
             ]
             model.optimizer_nonbert = AdamW(optimizer_grouped_parameters_nonbert, lr=config.lr2)
@@ -220,7 +237,7 @@ class Train(object):
             # Prepare optimizer and schedule (linear warmup and decay) for Bert parameters
             optimizer_grouped_parameters_bert = [
                 {'params': [p for n, p in model_bert if not any(nd in n for nd in no_decay)],
-                    'weight_decay': config.weight_decay},
+                 'weight_decay': config.weight_decay},
                 {'params': [p for n, p in model_bert if any(nd in n for nd in no_decay)], 'weight_decay': 0.0}
             ]
 
@@ -269,14 +286,14 @@ class Train(object):
             if dev_metric > best_metric:
                 best_e, best_metric = epoch, dev_metric
                 print(config.model + config.modelname + "/model_weights")
-                model.parser.save(config.model + config.modelname + "/model_weights")
+                model.parser.save(config.main_path + config.model + config.modelname + "/model_weights")
                 print(f"{t}s elapsed (saved)\n")
             else:
                 print(f"{t}s elapsed\n")
             total_time += t
             if epoch - best_e >= config.patience:
                 break
-        model.parser = BiaffineParser.load(config.model + config.modelname + "/model_weights")
+        model.parser = BiaffineParser.load(config.main_path + config.model + config.modelname + "/model_weights")
         if config.use_predicted:
             loss, metric = model.evaluate_predicted(test_loader, config.punct)
         else:

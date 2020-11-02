@@ -29,16 +29,12 @@ str_array2=("ar_padt" "eu_bdt" "zh_gsd" "en_ewt" "fi_tdt" "he_htb" "hi_hdtb" "it
 for ((i=0;i<${#str_array1[@]};++i)); do
         echo ${str_array1[i]}
         echo ${str_array2[i]}
-	if [ ! -d $udify/logs/train/${str_array2[i]} ]; then
-		mkdir -p $udify/logs/train/${str_array2[i]};
+	if [ ! -d $udify/train/${str_array2[i]} ]; then
+		mkdir -p $udify/train/${str_array2[i]};
 	fi
 
-        for split in train; do
-		echo $split
-		python $udify/predict.py $udify/logs/udify-model.tar.gz  $input_data/${str_array1[i]}/${str_array2[i]}-ud-$split.conllu $udify/logs/train/${str_array2[i]}/pred.conllu.udify --eval_file $udify/logs/train/${str_array2[i]}/pred.json
-		python $main_path/ud_eval.py $input_data/${str_array1[i]}/${str_array2[i]}-ud-$split.conllu $udify/logs/train/${str_array2[i]}/pred.conllu.udify
-		perl $main_path/conllu_to_conllx.pl < $udify/logs/train/${str_array2[i]}/pred.conllu.udify > $udify/logs/train/${str_array2[i]}/pred.conllx.udify
-		perl $main_path/conllu_to_conllx.pl < $input_data/${str_array1[i]}/${str_array2[i]}-ud-$split.conllu > $udify/logs/train/${str_array2[i]}/org.conllx.$split
-		python $main_path/substitue_underline.py $udify/logs/train/${str_array2[i]}/org.conllx.$split $udify/logs/train/${str_array2[i]}/pred.conllx.udify $udify/logs/train/${str_array2[i]}/pred.conllx.correct.udify.$split
-        done
+    for split in train; do
+		  echo $split
+		  python $udify/predict.py $udify/logs/udify-model.tar.gz  $input_data/${str_array1[i]}/${str_array2[i]}-ud-$split.conllu $udify/train/${str_array2[i]}/pred.conllu.udify --eval_file $udify/train/${str_array2[i]}/pred.json
+    done
 done

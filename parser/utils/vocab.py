@@ -1,20 +1,20 @@
 
-# Copyright (c) 2020 Idiap Research Institute, http://www.idiap.ch/
-# Written by Alireza Mohammadshahi <alireza.mohammadshahi@idiap.ch>,
+#Copyright (c) 20xx Idiap Research Institute, http://www.idiap.ch/
+#Written by Alireza Mohammadshahi <alireza.mohammadshahi@idiap.ch>,
 
-# This file is part of g2g-transformer.
+#This file is part of g2g-transformer.
 
-# g2g-transformer is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License version 2 as
-# published by the Free Software Foundation.
+#g2g-transformer is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License version 3 as
+#published by the Free Software Foundation.
 
-# g2g-transformer is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-# GNU General Public License for more details.
+#g2g-transformer is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#GNU General Public License for more details.
 
-# You should have received a copy of the GNU General Public License
-# along with g2g-transformer. If not, see <http://www.gnu.org/licenses/>.
+#You should have received a copy of the GNU General Public License
+#along with g2g-transformer. If not, see <http://www.gnu.org/licenses/>.
 
 from collections import Counter
 import os
@@ -186,7 +186,7 @@ class Vocab(object):
             all_offsets = []
 
         for i,(words,tags,heads,rels) in enumerate(zip(corpus.words, corpus.tags, corpus.heads, corpus.rels)):
-            
+
             old_to_new_node = {0:0}
             tokens_org, tokens_length = self.word2id(words)
             tokens = [item for sublist in tokens_org for item in sublist]
@@ -194,14 +194,12 @@ class Vocab(object):
             for token_id, token_length in enumerate(tokens_length):
                 index += token_length
                 old_to_new_node[token_id+1] = index
-
             # CLS heads and tags
             new_heads = []
             new_tags = []
             new_subword_head = [0]
             
             offsets = torch.tensor(list(old_to_new_node.values() ))[:-1] + 1
-            
             for token_id, (offset, token_length) in enumerate(zip(offsets, tokens_length)):
                 new_heads.append(old_to_new_node[heads[token_id]]+1)
                 for sub_token in range(token_length):
@@ -218,7 +216,6 @@ class Vocab(object):
             self.total_count += len(words_id)
 
             tags = torch.tensor(self.tokenizer.build_inputs_with_special_tokens(self.tag2id(new_tags) ))
-
             masks = torch.zeros(len(words_id)).long()
             masks[offsets[1:]] = 1
             rels = self.rel2id(rels[1:])

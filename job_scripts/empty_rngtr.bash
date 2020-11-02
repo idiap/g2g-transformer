@@ -23,7 +23,9 @@ TRAIN_PATH=""
 DEV_PATH=""
 TEST_PATH=""
 BERT_PATH=""
+INPUT_TYPE=""
 python run.py train --lr1 1e-5 --lr2 2e-3 -w 0.001 \
                     --modelname $MODELNAME --main_path $MAIN_PATH --num_iter_encoder 4 --batch_size 1000 \
                     --ftrain $TRAIN_PATH --ftest $TEST_PATH --fdev $DEV_PATH --punct --bert_path $BERT_PATH \
-                    --input_labeled_graph --use_mst_eval --stop_arc_rel --use_two_opts --layernorm_key --same_flag
+                    --input_labeled_graph --use_mst_eval --stop_arc_rel --use_two_opts --layernorm_key --same_flag \
+                    --input_type $INPUT_TYPE
