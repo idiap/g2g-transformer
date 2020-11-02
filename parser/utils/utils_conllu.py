@@ -1,4 +1,4 @@
-## adapted from https://github.com/Hyperparticle/udify
+## adopted from https://github.com/Hyperparticle/udify
 
 from __future__ import unicode_literals
 
