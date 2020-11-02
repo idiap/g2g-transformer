@@ -163,7 +163,7 @@ To replicate `refinement analysis` and `error analysis` results, you should use
 Predict Raw Sentences
 --------------------- 
 
-You can also predict dependency graphs of raw texts with a pre-trained model with ```predict.bash``` file. Just set ```input_type``` to ```raw```. Then, put all your sentences in a .txt file, and the output will be in CoNNL format.
+You can also predict dependency graphs of raw texts with a pre-trained model by modifying ```predict.bash``` file. Just set ```input_type``` to ```raw```. Then, put all your sentences in a .txt file, and the output will be in CoNNL format.
 
 Citations
 -------------
