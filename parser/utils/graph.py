@@ -1,11 +1,11 @@
 # coding=utf-8
-#Copyright (c) 20xx Idiap Research Institute, http://www.idiap.ch/
+#Copyright (c) 2020 Idiap Research Institute, http://www.idiap.ch/
 #Written by Alireza Mohammadshahi <alireza.mohammadshahi@idiap.ch>,
 
 #This file is part of g2g-transformer.
 
 #g2g-transformer is free software: you can redistribute it and/or modify
-#it under the terms of the GNU General Public License version 3 as
+#it under the terms of the GNU General Public License version 2 as
 #published by the Free Software Foundation.
 
 #g2g-transformer is distributed in the hope that it will be useful,
