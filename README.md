@@ -20,12 +20,13 @@ Contents
 - [Data Pre-processing and Initial Parser](#datapreprocessingandinitialparser)
 - [Training](#training)
 - [Evaluation](#evaluation)
+- [Predict Raw Sentences](#predictraw)
 - [Citations](#citations)
-
-<a name="installation"/>  
 
 Installation
 --------------  
+<a name="installation"/>  
+
 Following packages should be included in your environment:
 
 - Python >= 3.7
@@ -40,6 +41,8 @@ conda activate rngtr
 ```
 Quick Start
 -------------
+<a name="othertasks"/>  
+
 Graph-to-Graph Transformer architecture is general and can be applied to
 any NLP tasks which interacts with graphs. To use our implementation in your
 task, you just need to add `BertGraphModel` class to your code to encode
@@ -82,14 +85,11 @@ config.add_graph_par(GRAPH-CONFIG)
 encoder = BertGraphModel(config)
 ```
 
-<a name="citations"/>  
-
-
-
-<a name="datapreprocessingandinitialparser"/>  
 
 Data Pre-processing and Initial Parser 
 -----------------  
+
+<a name="datapreprocessingandinitialparser"/>  
 
 ### Dataset Preparation  
 
@@ -128,10 +128,11 @@ Alternatively, you can easily run the following command file to produce all requ
 bash job_scripts/udify_dataset.bash
 ```
 
-<a name="training"/>  
-
 Training
 -------------
+
+<a name="training"/>  
+
 To train your own model, you can easily fill out the script in `job_scripts` directory, 
 and run it. Here is the list of sample scripts:  
 
@@ -141,10 +142,11 @@ Syntactic Transformer | `baseline.bash` |
 Any initial parser+RNGTr | `rngtr.bash` |
 Empty+RNGTr | `empty_rngtr.bash` |
 
-<a name="evaluation"/>  
-
 Evaluation
 -------------
+
+<a name="evaluation"/>  
+
 First you should download official scripts from [UD](https://universaldependencies.org/conll18/evaluation.html), 
 [Penn Treebaks](https://depparse.uvt.nl/), and [German](https://ufal.mff.cuni.cz/conll2009-st/eval-data.html). Then,
 run the following command:  
@@ -155,10 +157,18 @@ bash job_scripts/predict.bash
 To replicate `refinement analysis` and `error analysis` results, you should use 
 [MaltEval](http://www.maltparser.org/malteval.html) tools.
 
-<a name="othertasks"/>  
+Predict Raw Sentences
+--------------------- 
+
+<a name="predictraw"/>  
+
+
 
 Citations
 -------------
+
+<a name="citations"/>  
+
 If you use this code for your research, please cite these works as:
 ```
 @misc{mohammadshahi2020recursive,
