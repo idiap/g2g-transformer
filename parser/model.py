@@ -414,14 +414,6 @@ class Model(object):
                     s_arc_final[index] = s_arc[index]
                     s_rel_final[index] = s_rel[index]
 
-                if self.config.show_refinement:
-                    if counter == 0:
-                        self.initial_refinement_total(new_arcs.clone(), new_rels.clone(), mask_unused.clone()
-                                                      , arcs.clone(), rels.clone(), mask_gold.clone())
-                    elif counter > 0:
-                        self.refinement_total(new_arcs.clone(), new_rels.clone(), mask_unused.clone(),
-                                              stop_sign.clone())
-
             gold_arcs, gold_rels = arcs[mask_gold], rels[mask_gold]
             if self.config.use_mst_eval:
                 pred_arcs, pred_rels = self.decode_mst(s_arc_final,s_rel_final, mask_unused,prepare=False)
@@ -490,14 +482,6 @@ class Model(object):
                 index = stop_sign.nonzero()
                 s_arc_final[index] = s_arc[index]
                 s_rel_final[index] = s_rel[index]
-
-                if self.config.show_refinement:
-                    if counter == 0:
-                        self.initial_refinement_total(new_arcs.clone(), new_rels.clone(), mask_unused.clone()
-                                          , arcs.clone(), rels.clone(), mask_gold.clone())
-                    elif counter > 0:
-                        self.refinement_total(new_arcs.clone(), new_rels.clone(), mask_unused.clone(),
-                                              stop_sign.clone())
 
             gold_arcs, gold_rels = arcs[mask_gold], rels[mask_gold]
 
