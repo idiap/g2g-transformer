@@ -17,8 +17,10 @@
 # You should have received a copy of the GNU General Public License
 # along with g2g-transformer. If not, see <http://www.gnu.org/licenses/>.
 
-main_path=""
+#where to save prediction
+save_path=""
 udify=""
+#path to UD data
 input_data=""
 
 
@@ -29,12 +31,12 @@ str_array2=("ar_padt" "eu_bdt" "zh_gsd" "en_ewt" "fi_tdt" "he_htb" "hi_hdtb" "it
 for ((i=0;i<${#str_array1[@]};++i)); do
         echo ${str_array1[i]}
         echo ${str_array2[i]}
-	if [ ! -d $udify/train/${str_array2[i]} ]; then
-		mkdir -p $udify/train/${str_array2[i]};
+	if [ ! -d $save_path/${str_array2[i]} ]; then
+		mkdir -p $save_path/${str_array2[i]};
 	fi
 
     for split in train; do
 		  echo $split
-		  python $udify/predict.py $udify/logs/udify-model.tar.gz  $input_data/${str_array1[i]}/${str_array2[i]}-ud-$split.conllu $udify/train/${str_array2[i]}/pred.conllu.udify --eval_file $udify/train/${str_array2[i]}/pred.json
+		  python $udify/predict.py $udify/logs/udify-model.tar.gz  $input_data/${str_array1[i]}/${str_array2[i]}-ud-$split.conllu $save_path/${str_array2[i]}/pred.conllu.udify --eval_file $save_path/${str_array2[i]}/pred.json
     done
 done
