@@ -35,10 +35,10 @@ fi
 
 echo "Predicting the input file"
 if [ "$initial" = "" ]; then
-  python run.py predict --modelname $modelname --fdata $input --fpred $output_path/pred.$type --mainpath $main_path/ --input_type $type
+  python run.py predict --modelpath $modelpath --fdata $input --fpred $output_path/pred.$type --input_type $type
 else
-  python run.py predict --fdata $input --finit $initial --modelname $modelname --use_predicted --input_type $type \
-            --fpred $output_path/pred.$type --mainpath $main_path/
+  python run.py predict --fdata $input --finit $initial --modelpath $modelpath --use_predicted --input_type $type \
+            --fpred $output_path/pred.$type
 fi
 echo "Finished Prediction"
 
