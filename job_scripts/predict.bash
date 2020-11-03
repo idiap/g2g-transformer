@@ -45,7 +45,7 @@ echo "Finished Prediction"
 
 if [ "$type" = "conllu" ]; then
     echo "Evaluating based on official UD script"
-    python $main_path/ud_eval.py $input $output_path/pred.$type -v
+    python ud_eval.py $input $output_path/pred.$type -v
 elif [ "$type" = "conllx" ]; then
     if [ "$punct" = "no" ]; then
         perl eval.pl -g $input -s $output_path/pred.$type -q
