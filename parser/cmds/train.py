@@ -199,8 +199,11 @@ class Train(object):
         model = Model(vocab, parser, config, vocab.n_rels)
         total_time = timedelta()
         best_e, best_metric = 1, Metric()
-
-        num_train_optimization_steps = int(config.num_iter_encoder * config.epochs * len(train_loader))
+        if config.use_predicted:
+            num_train_optimization_steps = int((config.num_iter_encoder-1) * config.epochs * len(train_loader))
+        else:
+            num_train_optimization_steps = int(config.num_iter_encoder * config.epochs * len(train_loader))
+            
         warmup_steps = int(config.warmupproportion * num_train_optimization_steps)
 
         if config.use_two_opts:
