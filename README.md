@@ -6,11 +6,11 @@ range of natural language processing (NLP) tasks, especially when combined with
 language-model pre-training, such as BERT.
 
 We propose ["Graph-to-Graph Transformer"](https://www.aclweb.org/anthology/2020.findings-emnlp.294/) and 
-["Recursive Non-Autoregressive Graph-to-Graph Transformer for Dependency Parsing with Iterative Refinement"](https://arxiv.org/abs/2003.13118)
+["Recursive Non-Autoregressive Graph-to-Graph Transformer for Dependency Parsing with Iterative Refinement"](https://direct.mit.edu/tacl/article/doi/10.1162/tacl_a_00358/97778/Recursive-Non-Autoregressive-Graph-to-Graph)(accepted to TACL)
 to generalize vanilla Transformer to encode graph structure, and builds the desired
 output graph.
 
-**Note** : To use G2GTr model to transition-based dependency parsing, please refer to [G2GTr](https://github.com/alirezamshi/G2GTr) repository.
+**Note** : To use G2GTr model for transition-based dependency parsing, please refer to [G2GTr](https://github.com/alirezamshi/G2GTr) repository.
 
 Contents
 ---------------
